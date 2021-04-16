@@ -3,15 +3,17 @@
     <v-card class="mx-auto mt-10" max-width="600">
         <v-container>
             <form>
-                <h2 style="text-align: center;">Log In</h2>
+                <h2 style="text-align: center; color: #76FF03;">Log In</h2>
                 <v-divider></v-divider>
-                <v-text-field color="#0D47A1" class="mt-5" v-model="email" label="Email" outlined>
+                <v-text-field color="#76FF03" class="mt-5" v-model="email" label="Email" outlined>
                 </v-text-field>
-                <v-text-field color="#0D47A1" v-model="password" outlined :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'" :type="show ? 'text' : 'password'" label="Password" @click:append="show = !show"></v-text-field>
-                <v-checkbox v-checkbox v-model="rememberME" label="Stay Logged in?"></v-checkbox>
-                <v-btn class="white--text" color="blue darken-3" outlined rounded @click="login">
-                    Login
-                </v-btn>
+                <v-text-field hide-details color="#76FF03" v-model="password" outlined :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'" :type="show ? 'text' : 'password'" label="Password" @click:append="show = !show"></v-text-field>
+                <v-checkbox v-checkbox v-model="rememberME" label="Stay Logged in?" color="#76FF03"></v-checkbox>
+                <v-row justify="center" class="mb-1">
+                    <v-btn color="#76FF03" outlined rounded @click="login">
+                        Login
+                    </v-btn>
+                </v-row>
             </form>
         </v-container>
     </v-card>
