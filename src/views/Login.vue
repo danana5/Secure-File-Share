@@ -7,7 +7,7 @@
                 <v-text-field color="#76FF03" class="mt-5" v-model="email" label="Email" outlined>
                 </v-text-field>
                 <v-text-field hide-details color="#76FF03" v-model="password" outlined :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'" :type="show ? 'text' : 'password'" label="Password" @click:append="show = !show"></v-text-field>
-                <v-checkbox v-checkbox v-model="rememberME" label="Stay Logged in?" color="#76FF03"></v-checkbox>
+                <v-checkbox v-model="rememberME" label="Stay Logged in?" color="#76FF03"></v-checkbox>
                 <p class="mt-1">Don't have an account? <router-link to="/" style="text-decoration-color: #76FF03; color: #76FF03">Create one here!</router-link></p>
                 <v-row justify="center" class="mb-1">
                     <v-btn color="#76FF03" outlined rounded @click="login">
@@ -40,7 +40,7 @@ export default {
                 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                     .then(user => {
-                            console.log("Logged in as " + user.email)
+                            console.log("Logged in as " + user.user.email)
                             this.$router.push("/dash")
                             this.loading = false
                             this.logged = false
@@ -53,7 +53,7 @@ export default {
                 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
                 firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                     .then(user => {
-                            console.log("Logged in as " + user.email)
+                            console.log("Logged in as " + user.user.email)
                             this.$router.push("/dash")
                             this.loading = false
                             this.logged = false
