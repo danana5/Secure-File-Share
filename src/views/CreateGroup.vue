@@ -8,10 +8,10 @@
             <v-form ref="form" v-model="valid" lazy-validation>
                 <v-text-field v-model="groupName" :rules="nameRules" label="Group Name" placeholder="Group Name" required clearable>
                 </v-text-field>
-                <v-btn class="white--text mr-4" color="red darken-3" outlined rounded text :to="`/dash`">
+                <v-btn class="white--text mr-4" color="red darken-3" outlined rounded text to="`/dash`">
                     Cancel
                 </v-btn>
-                <v-btn class="white--text" color="blue darken-3" outlined :disabled="!valid" rounded text @click="saveSheet">
+                <v-btn class="white--text" color="blue darken-3" outlined :disabled="!valid" rounded text @click="createGroup()">
                     Create Group
                 </v-btn>
             </v-form>
@@ -22,8 +22,8 @@
 
 <script>
 import db from '../firebaseInit'
+import firebase from "firebase"
 export default {
-    name: 'createGroup',
     data() {
         return {
             valid: true,
@@ -31,27 +31,24 @@ export default {
             tasks: false,
             menu: false,
             loading: false,
+            groupUsers: [],
             nameRules: [
                 v => !!v || 'Name is required',
             ],
         }
     },
     methods: {
-        createGheet() {
+        createGroup() {
             if (this.$refs.form.validate()) {
                 this.loading = true
-                db.collection("night-sheets").add({
-                    Date: this.date,
-                    Day: this.day,
-                    Notes: this.notes,
-                    Card: this.card,
-                    Cash: this.cash,
-                    Total: parseInt(this.cash) + parseInt(this.card),
-                    Name: this.sheetName,
-                    Tasks: this.tasks
+                let user = firebase.auth().currentUser.uid
+                this.groupUsers.push(user)
+                db.collection("groups").add({
+                    name: this.groupName,
+                    users: this.groupUsers
                 })
                 this.loading = false
-                this.$router.push(`/list`)
+                this.$router.push(`/dash`)
             }
         }
     }
