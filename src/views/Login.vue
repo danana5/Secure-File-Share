@@ -2,19 +2,18 @@
 <v-container>
     <v-card class="mx-auto mt-10" max-width="600">
         <v-container>
-            <form>
                 <h2 style="text-align: center; color: #76FF03;">Log In</h2>
                 <v-divider></v-divider>
                 <v-text-field color="#76FF03" class="mt-5" v-model="email" label="Email" outlined>
                 </v-text-field>
                 <v-text-field hide-details color="#76FF03" v-model="password" outlined :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'" :type="show ? 'text' : 'password'" label="Password" @click:append="show = !show"></v-text-field>
                 <v-checkbox v-checkbox v-model="rememberME" label="Stay Logged in?" color="#76FF03"></v-checkbox>
+                <p class="mt-1">Don't have an account? <router-link to="/" style="text-decoration-color: #76FF03; color: #76FF03">Create one here!</router-link></p>
                 <v-row justify="center" class="mb-1">
                     <v-btn color="#76FF03" outlined rounded @click="login">
                         Login
                     </v-btn>
                 </v-row>
-            </form>
         </v-container>
     </v-card>
 </v-container>
