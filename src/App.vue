@@ -1,6 +1,6 @@
 <template>
 <v-app>
-    <NavBar :online="online" :loggedIn="loggedIn" />
+    <NavBar :online="online" :loggedIn="loggedIn" :user="user"/>
     <v-main style="background:#BDBDBD">
         <router-view></router-view>
     </v-main>
@@ -18,15 +18,18 @@ export default {
     },
     data: () => ({
         online: false,
-        loggedIn: false
+        loggedIn: false,
+        user: ""
     }),
     watch: {
         $route() {
             if(firebase.auth().currentUser){
                 this.loggedIn = true
+                this.user = firebase.auth().currentUser.email
             }
             else{
                 this.loggedIn = false
+                this.user = ""
             }
         }
     },
