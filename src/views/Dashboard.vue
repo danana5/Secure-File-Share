@@ -1,7 +1,50 @@
 <template>
-    <h1>Dashboard</h1>
+<v-container>
+    <v-layout wrap>
+        <div v-for="(group, i) in userGroups" :key="i">
+            <Groups :group="group"></Groups>
+        </div>
+        <v-card flat color="white" max-width="350px" class="ma-10">
+                <v-card-title>
+                    Create a Group
+                </v-card-title>
+                <v-btn to="/create-group">test</v-btn>
+        </v-card>
+    </v-layout>
+</v-container>
 </template>
+
 <script>
+import db from "../firebaseInit"
+import firebase from "firebase"
+import Groups from "../components/Groups"
 export default {
+    components:{
+        Groups,
+    },
+    data() {
+        return {
+            userGroups: [],
+            userID: ""
+        }
+    },
+    created() {
+        this.userID = firebase.auth().currentUser.uid
+        db.collection('groups').get().then(docs => {
+            docs.forEach(doc => {
+                let map = doc.data().users
+                for (let i = 0; i < map.length; i++) {
+                    if (map[i] == this.userID) {
+                        const data = {
+                            'id': doc.id,
+                            'name': doc.data().name,
+                            'users': doc.data().users
+                        }
+                        this.userGroups.push(data)
+                    }
+                }
+            })
+        })
+    },
 }
 </script>
