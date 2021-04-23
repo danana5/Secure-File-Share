@@ -1,16 +1,17 @@
 <template>
 <v-container>
-    <v-layout wrap>
-        <div v-for="(group, i) in userGroups" :key="i">
-            <Groups :group="group"></Groups>
+    <v-card>
+        <div class="pa-3">
+            <h1>Your Groups</h1><p><router-link to="/create-group" style="color: #76FF03">Create a New Group</router-link></p>
         </div>
-        <v-card flat color="white" max-width="350px" class="ma-10">
-                <v-card-title>
-                    Create a Group
-                </v-card-title>
-                <v-btn to="/create-group">test</v-btn>
-        </v-card>
-    </v-layout>
+        <v-container>
+            <v-layout wrap>
+                <div v-for="(group, i) in userGroups" :key="i">
+                    <Groups :group="group"></Groups>
+                </div>
+            </v-layout>
+        </v-container>
+    </v-card>
 </v-container>
 </template>
 
@@ -19,7 +20,7 @@ import db from "../firebaseInit"
 import firebase from "firebase"
 import Groups from "../components/Groups"
 export default {
-    components:{
+    components: {
         Groups,
     },
     data() {
