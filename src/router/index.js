@@ -39,7 +39,7 @@ let router = new VueRouter({
       },
     },
     {
-      path: "/group/:groupID",
+      path: "/group/:group_id",
       name: "group",
       component: () => import("../views/Group.vue"),
       meta: {
