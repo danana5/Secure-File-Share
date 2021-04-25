@@ -17,9 +17,12 @@
             </v-row>
         </v-container>
     </v-card>
-    <v-dialog v-model="failed">
-        <v-card>
-            {{errorMsg}}
+    <v-dialog v-model="failed" max-width="400">
+        <v-card max-width="400">
+            <v-container>
+                <h1>Error!</h1>
+                {{errorMsg}}
+            </v-container>
         </v-card>
     </v-dialog>
 </v-container>
@@ -55,15 +58,16 @@ export default {
                         this.user = user.user
                         sessionStorage.setItem("password", this.password)
                         const rsa = new RSA()
-
                         rsa.generateKeyPair(this.newUser)
                     },
                     err => {
-                        alert(err.message)
+                        this.errorMsg = err.message
+                        this.failed = true
                     })
                 e.preventDefault();
             } else {
                 this.failed = true
+                this.errorMsg = "These Passwords Do Not Match"
             }
         },
         newUser(keyPair) {
