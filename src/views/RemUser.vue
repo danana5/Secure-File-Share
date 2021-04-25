@@ -19,6 +19,7 @@
 
 <script>
 import db from "../firebaseInit"
+import firebase from "firebase"
 export default {
     data(){
         return {
@@ -55,6 +56,13 @@ export default {
                 }
             }
             const id = this.$route.params.group_id
+            db.collection("users").where("UserID", "==", user).get().then(res=>{
+                res.forEach(u => {
+                    u.ref.update({
+                        [id]: firebase.firestore.FieldValue.delete()
+                    })
+                })
+            })
             db.collection("groups").doc(id).update({
                 name: this.group.name,
                 users: newUsers
