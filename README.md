@@ -50,7 +50,7 @@ The frontend gives the user full view of all necessary information with regards 
 * The user will decrypt the groups private key and will encrypt it again using the new users public key and add the group’s private key to the new user’s Cloud  Firestore.
 * Once a user is removed, he is removed from the group’s members array and his decrypted private key is removed from his Cloud Firestore.
 
-##	File Upload
+###	File Upload
 *	Any user in a group can upload a file to the cloud in that group. Each group has a folder on the Cloud Storage.
 *	The user will decrypt their private key using AES with their password.
 *	The user will then decrypt the groups private key using their private key.
@@ -58,7 +58,7 @@ The frontend gives the user full view of all necessary information with regards 
 *	The file is encrypted and signed using the group public key and the certificate.
 *	The file is then stored on Firebase Cloud Storage.
 
-##	File Download
+###	File Download
 *	The user decrypts their own private key using AES with their password.
 *	The user then decrypts the groups private key using their private key.
 *	The group private key is then used to decrypt the file being downloaded.
