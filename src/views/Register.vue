@@ -17,12 +17,21 @@
             </v-row>
         </v-container>
     </v-card>
+    <v-dialog v-model="failed">
+        <v-card>
+            {{errorMsg}}
+        </v-card>
+    </v-dialog>
 </v-container>
 </template>
 
 <script>
 import db from "../firebaseInit"
 import firebase from "firebase"
+import {
+    RSA
+} from "hybrid-crypto-js"
+import CryptoJS from "crypto-js"
 export default {
     data() {
         return {
@@ -34,27 +43,20 @@ export default {
             rememberME: false,
             failed: false,
             loading: false,
-            logged: true
+            logged: true,
+            errorMsg: "",
+            user: {}
         }
     },
     methods: {
         register: function (e) {
             if (this.password == this.password2) {
                 firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(user => {
-                        db.collection("users").add({
-                            UserID: user.user.uid,
-                            email: user.user.email
-                        })
-                        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-                        firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-                            .then(u => {
-                                    console.log("Logged in as " + u.user.email)
-                                    this.$router.push("/dash")
-                                },
-                                err => {
-                                    alert(err.message)
-                                    this.loading = false
-                                })
+                        this.user = user.user
+                        sessionStorage.setItem("password", this.password)
+                        const rsa = new RSA()
+
+                        rsa.generateKeyPair(this.newUser)
                     },
                     err => {
                         alert(err.message)
@@ -63,6 +65,33 @@ export default {
             } else {
                 this.failed = true
             }
+        },
+        newUser(keyPair) {
+            const pubKey = keyPair.publicKey
+            const privKey = keyPair.privateKey
+
+            let cryptoPrivateKey = CryptoJS.AES.encrypt(String(privKey), this.password).toString()
+
+            const newUser = {
+                UserID: this.user.uid,
+                email: this.user.email,
+                publicKey: pubKey,
+                privateKey: cryptoPrivateKey
+            }
+
+            db.collection("users").add(newUser).then(() => {
+                firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+                firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+                    .then(u => {
+                            console.log("Logged in as " + u.user.email)
+                            this.$router.push("/dash")
+                        },
+                        err => {
+                            this.errorMsg = err.message
+                            this.failed = true
+                            this.loading = false
+                        })
+            })
         }
     }
 }
