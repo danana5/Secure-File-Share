@@ -7,6 +7,14 @@ Vue.use(VueRouter);
 let router = new VueRouter({
   routes: [
     {
+      path: "/",
+      name: "home",
+      component: () => import("../views/Home.vue"),
+      meta: {
+        requiresGuest: true,
+      },
+    },
+    {
       path: "/log-in",
       name: "login",
       component: () => import("../views/Login.vue"),
@@ -15,7 +23,7 @@ let router = new VueRouter({
       },
     },
     {
-      path: "/",
+      path: "/register",
       name: "register",
       component: () => import("../views/Register.vue"),
       meta: {
