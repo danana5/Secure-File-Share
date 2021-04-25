@@ -79,7 +79,6 @@ export default {
             firebase.storage().ref().child(path).listAll().then(res => {
                 res.items.forEach(item => {
                     this.group.files.push(item)
-                    console.log(this.group.files)
                 })
             })
         },
