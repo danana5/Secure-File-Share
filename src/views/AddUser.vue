@@ -19,6 +19,9 @@
 
 <script>
 import db from "../firebaseInit"
+import firebase from "firebase";
+import {Crypt} from "hybrid-crypto-js";
+import CryptoJS from "crypto-js";
 export default {
     data(){
         return {
@@ -47,8 +50,37 @@ export default {
     methods:  {
         addUser(user){
             const id = this.$route.params.group_id
+            const currentUser = firebase.auth().currentUser
             this.group.users.push(user)
-            db.collection("groups").doc(id).update(this.group)
+
+            db.collection("users").where("UserID", "==", user).get().then(res => {
+                res.forEach(newUser => {
+                    db.collection("users").where("UserID", "==", currentUser.uid).get().then(snapshot => {
+                        snapshot.forEach(u => {
+                            let privKey = u.data().privateKey
+                            let password = sessionStorage.getItem("password")
+
+                            let decrypted = CryptoJS.AES.decrypt(privKey, password)
+                            let usersPrivateKey = decrypted.toString(CryptoJS.enc.Utf8)
+                            let groupEncryptedKey = u.data()[id]
+
+                            const crypt = new Crypt()
+
+                            let groupKey = crypt.decrypt(usersPrivateKey, groupEncryptedKey)
+                            let encryptedKey = crypt.encrypt(newUser.data().publicKey, groupKey.message)
+
+                            db.collection("users").doc(newUser.id).update({
+                                [id] : String(encryptedKey)
+                            })
+
+                            db.collection("groups").doc(id).update({
+                                users: this.group.users
+                            })
+                        })
+                    })
+                })
+            })
+            
             this.$router.push("/group/" + id)
         }
     }
