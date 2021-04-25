@@ -39,6 +39,22 @@ let router = new VueRouter({
       },
     },
     {
+      path: "/group/:group_id/add",
+      name: "add-user",
+      component: () => import("../views/AddUser.vue"),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/group/:group_id/remove",
+      name: "rem-user",
+      component: () => import("../views/RemUser.vue"),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: "/group/:group_id",
       name: "group",
       component: () => import("../views/Group.vue"),
