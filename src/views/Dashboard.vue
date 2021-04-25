@@ -1,6 +1,6 @@
 <template>
 <v-container>
-    <v-card>
+    <v-card flat class="mx-auto">
         <div class="pa-3">
             <h1>Your Groups</h1><p><router-link to="/create-group" style="color: #76FF03">Create a New Group</router-link></p>
         </div>

@@ -1,14 +1,13 @@
 <template>
-<v-card flat max-width="300" class="mr-5 mt-2" outlined>
+<v-card flat max-width="300" class="mr-2 ml-2 mt-2" outlined>
     <v-flex wrap>
         <v-list-item>
-            <v-list-item-icon>
-                <v-icon color="#76FF03" v-if="group.users.length > 2">mdi-account-group</v-icon>
-                <v-icon color="#76FF03" v-else-if="group.users.length > 1">mdi-account-multiple</v-icon>
-                <v-icon color="#76FF03" v-else>mdi-account</v-icon>
-            </v-list-item-icon>
             <v-list-item-content>
-                <v-list-item-title class="ml-6"><strong>{{group.name}}</strong></v-list-item-title>
+                <v-list-item-title class="text-center">
+                    <v-icon color="#76FF03" v-if="group.users.length > 2">mdi-account-group</v-icon>
+                    <v-icon color="#76FF03" v-else-if="group.users.length > 1">mdi-account-multiple</v-icon>
+                    <v-icon color="#76FF03" v-else>mdi-account</v-icon><strong>{{group.name}}</strong>
+                </v-list-item-title>
                 <v-flex max-height="10">
                     <v-expansion-panels class="mt-2" flat>
                         <v-expansion-panel>
@@ -22,7 +21,7 @@
                         </v-expansion-panel>
                     </v-expansion-panels>
                 </v-flex>
-                <v-btn :to="`/group/${group.id}`" rounded text outlined color="#76FF03" class="mt-2">
+                <v-btn :to="`/group/${group.id}`" rounded outlined color="#76FF03" class="mt-2">
                     <span style="color: #76FF03">View Group</span>
                 </v-btn>
             </v-list-item-content>

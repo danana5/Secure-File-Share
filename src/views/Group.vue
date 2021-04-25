@@ -1,6 +1,6 @@
 <template>
 <v-container>
-    <v-card flat>
+    <v-card flat max-width="1100" class="mx-auto">
         <v-container>
             <h1>
                 <v-icon size="35" color="#76FF03">mdi-account-group</v-icon> {{ group.name }}
@@ -15,9 +15,9 @@
             <v-container>
                 <v-list>
                     <h3>Files</h3>
-                    <v-list-item v-for="(file, i) in group.files" :key="i" @click="download(file)">
+                    <v-list-item v-for="(file, i) in group.files" :key="i">
                         <v-list-item-avatar>
-                            <v-icon>
+                            <v-icon color="#76FF03">
                                 mdi-file-cloud
                             </v-icon>
                         </v-list-item-avatar>
@@ -26,6 +26,16 @@
                                 {{file}}
                             </v-list-item-title>
                         </v-list-item-content>
+                        <v-list-item-action>
+                            <v-row>
+                                <v-btn icon @click="download(file)" color="#187789">
+                                    <v-icon>mdi-download</v-icon>
+                                </v-btn>
+                                <v-btn icon @click="deleteFile(file)" color="#187789">
+                                    <v-icon>mdi-trash-can</v-icon>
+                                </v-btn>
+                            </v-row>
+                        </v-list-item-action>
                     </v-list-item>
                 </v-list>
             </v-container>
@@ -37,7 +47,9 @@
 <script>
 import db from "../firebaseInit"
 import firebase from "firebase"
-import {Crypt} from "hybrid-crypto-js";
+import {
+    Crypt
+} from "hybrid-crypto-js";
 import fileDownload from "js-file-download";
 import CryptoJS from "crypto-js";
 export default {
@@ -85,7 +97,7 @@ export default {
                             const path = `${this.group.id}/${this.chosenFile.name}`
 
                             const reader = new FileReader()
-                            reader.onload = function(e) {
+                            reader.onload = function (e) {
                                 let file = e.target.result
                                 let signature = crypt.signature(groupPrivateKey.message, file)
                                 let encryptedFile = crypt.encrypt(pubKey, file, signature)
@@ -99,19 +111,20 @@ export default {
             }
         },
         getFiles() {
+            this.group.files = []
             firebase.storage().ref().child(this.group.id).listAll().then(res => {
                 res.items.forEach(item => {
                     this.group.files.push(item.name)
                 })
             })
         },
-        download(file){
+        download(file) {
             db.collection("groups").doc(this.group.id).get().then(doc => {
                 let pubKey = doc.data().publicKey
                 db.collection("users").where("UserID", "==", firebase.auth().currentUser.uid).get().then(res => {
                     res.forEach(u => {
                         let privKey = u.data().privateKey
-                        
+
                         let password = sessionStorage.getItem("password")
                         let decrypted = CryptoJS.AES.decrypt(privKey, password)
                         let usersPrivateKey = decrypted.toString(CryptoJS.enc.Utf8)
@@ -128,14 +141,13 @@ export default {
                             req.onload = () => {
                                 let blob = req.response
                                 const reader = new FileReader()
-                                reader.onload = function(e){
+                                reader.onload = function (e) {
                                     const textFile = e.target.result
                                     let decryptedFile = crypt.decrypt(groupPrivateKey.message, atob(textFile.split(",")[1]))
                                     let verified = crypt.verify(pubKey, decryptedFile.signature, decryptedFile.message)
-                                    if(!verified){
+                                    if (!verified) {
                                         alert("FUUUCKKK")
-                                    } 
-                                    else {
+                                    } else {
                                         let stringResponse = atob(decryptedFile.message.split(",")[1])
                                         fileDownload(stringResponse, file)
                                     }
@@ -148,6 +160,10 @@ export default {
                     })
                 })
             })
+        },
+        deleteFile(file){
+            const path = `${this.group.id}/${file}`
+            firebase.storage().ref().child(path).delete().then(() => this.getFiles())
         }
     }
 };
