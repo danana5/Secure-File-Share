@@ -21,7 +21,7 @@ npm run lint
 ```
 
 ##	APPLICATION DESCRIPTION
-My web application allows users to create “groups” and add and remove other users to these groups. Each user in a group can upload and download files. Every file uploaded is encrypted for storage on the Firebase Cloud Storage. The files are the decrypted then and are downloaded for the user. If the files were to be viewed on Firebase Storage, as seen in my demonstration video, they are unopenable due to the encryption.
+My web application allows users to create “groups” and add and remove other users to these groups. Each user in a group can upload and download files. Every file uploaded is encrypted for storage on the Firebase Cloud Storage. The files are the decrypted then and are downloaded for the user. If the files were to be viewed on Firebase Storage they are unopenable due to the encryption.
 
 ##	TECHNICAL IMPLEMENTATION
 My application is built using VueJS, Vuetify, Firebase Authentication, Firebase Cloud Firestore, Firebase Cloud Storage, Hybrid Crypto JS and Crypto JS.
