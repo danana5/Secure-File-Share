@@ -31,19 +31,14 @@ export default {
     },
     created() {
         this.userID = firebase.auth().currentUser.uid
-        db.collection('groups').get().then(docs => {
+        db.collection('groups').where("users", "array-contains", this.userID).get().then(docs => {
             docs.forEach(doc => {
-                let map = doc.data().users
-                for (let i = 0; i < map.length; i++) {
-                    if (map[i] == this.userID) {
-                        const data = {
-                            'id': doc.id,
-                            'name': doc.data().name,
-                            'users': doc.data().users
-                        }
-                        this.userGroups.push(data)
-                    }
+                const data = {
+                    "name": doc.data().name,
+                    "id" : doc.id,
+                    "users": doc.data().users
                 }
+                this.userGroups.push(data)
             })
         })
     },
