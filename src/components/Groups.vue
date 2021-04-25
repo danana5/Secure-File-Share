@@ -1,5 +1,5 @@
 <template>
-<v-card flat max-width="300" class="mr-5" outlined>
+<v-card flat max-width="300" class="mr-5 mt-2" outlined>
     <v-flex wrap>
         <v-list-item>
             <v-list-item-icon>
