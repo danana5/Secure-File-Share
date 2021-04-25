@@ -1,6 +1,12 @@
 <template>
 	<v-container>
-		<v-card flat max-width="1100" class="mx-auto">
+		<v-card
+			flat
+			max-width="1100"
+			class="mx-auto"
+			:loading="loading"
+			:disabled="loading"
+		>
 			<v-container>
 				<h1>
 					<v-icon size="35" color="#76FF03">mdi-account-group</v-icon>
@@ -72,6 +78,7 @@ export default {
 			chosenFile: null,
 			upFile: null,
 			path: "",
+			loading: false
 		};
 	},
 	created() {
@@ -87,6 +94,7 @@ export default {
 	methods: {
 		async upload() {
 			if (this.chosenFile != null) {
+				this.loading = true
 				this.path = `${this.$route.params.group_id}/${this.chosenFile.name}`;
 				db.collection("groups")
 					.doc(this.group.id)
@@ -135,6 +143,7 @@ export default {
 			}
 		},
 		getFiles() {
+			this.loading = true
 			this.group.files = [];
 			firebase
 				.storage()
@@ -145,6 +154,7 @@ export default {
 					res.items.forEach((item) => {
 						this.group.files.push(item.name);
 					});
+					this.loading = false
 				});
 		},
 		async download(file) {
